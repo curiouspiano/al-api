@@ -1,11 +1,18 @@
-FROM python:3.8-slim-buster
+# 
+FROM python:3.9
 
-WORKDIR /app
+# 
+WORKDIR /code
 
-COPY requirements.txt requirements.txt
+# 
+COPY ./requirements.txt /code/requirements.txt
 
-RUN pip3 install -r requirements.txt
+# 
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-COPY . .
+# 
+COPY ./app /code/app
 
-CMD [ "uvicorn", "main:app" , "--reload"]
+# 
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+
