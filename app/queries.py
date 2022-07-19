@@ -1,7 +1,10 @@
 import pymongo
 import pandas as pd
+import os
+db_usn = os.getenv('DB_USER')
+db_pass = os.getenv('DB_PASS')
 
-client = pymongo.MongoClient("mongodb+srv://al:al@al.hapcu.mongodb.net/?retryWrites=true&w=majority")
+client = pymongo.MongoClient("mongodb+srv://{}:{}@al.hapcu.mongodb.net/?retryWrites=true&w=majority".format(db_usn, db_pass))
 db = client.lootDB
 C_upgrades = db.upgrades
 
@@ -11,6 +14,7 @@ SCROLL_COSTS = {
     "scroll1" : 40000,
     "scroll2" : 1600000,
     "scroll3" : 480000000,
+    "scroll4" : 25000000000,
     #CSCROLLS
     "cscroll0" : 6400,
     "cscroll1" : 240000,
@@ -23,7 +27,8 @@ OFFERINGS = {
     "nan" : 0,
     float('nan') : 0,
     'offeringp' : 1000000,
-    'offering' : 27400000
+    'offering' : 27400000,
+    'offeringx' : 600000000
 }
 
 def get_relevant_upgrade_data(item_name):
@@ -49,7 +54,11 @@ def get_cheapest_upgrade(level_data, cur_value):
         print(row)
 
         scroll_name = str(level_data.iloc[index, level_data.columns.get_loc('scroll')])
-        offering_name = str(level_data.iloc[index, level_data.columns.get_loc('offering')])
+        offering_name = None
+        try:
+            offering_name = str(level_data.iloc[index, level_data.columns.get_loc('offering')])
+        except:
+            print("No offering")
         chance = float(level_data.iloc[index, level_data.columns.get_loc('chance')])
         #Floor of chance is 100%
         print(OFFERINGS[offering_name])
