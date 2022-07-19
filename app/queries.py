@@ -38,7 +38,7 @@ def get_relevant_upgrade_data(item_name):
     #convert to pandas object
     df = pd.DataFrame(list(res))
     #Filter out anything that isn't 'scrollX' or 'cscrollX'
-    df = df[df['scroll'].str.contains('scroll\\d', regex=True)]
+    df = df[df['scroll'].str.contains('scroll\\d', regex=True,na=False)]
     upgrade_data = df.groupby(['level','scroll', 'offering'],dropna=False).median().reset_index()
     return upgrade_data
 
